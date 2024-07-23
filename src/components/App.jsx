@@ -5,7 +5,7 @@ import { NoteForm } from "./NoteForm";
 
 export const App = ({ service }) => {
   const [notes, setNotes] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [selectedNote, setSelectedNote] = useState(null);
 
   // (!) Get notes from service
   useEffect(() => {
@@ -17,7 +17,7 @@ export const App = ({ service }) => {
 
   // Select new empty note
   const newNote = () => {
-    setSelected({
+    setSelectedNote({
       title: "",
       text: "",
       id: null,
@@ -26,12 +26,12 @@ export const App = ({ service }) => {
 
   // Set note as selected
   const onSelect = useCallback((note) => {
-    setSelected(note);
+    setSelectedNote(note);
   }, []);
 
   // Unselect note
   const onCancel = useCallback(() => {
-    setSelected(null);
+    setSelectedNote(null);
   }, []);
 
   // Save note to service
@@ -40,12 +40,12 @@ export const App = ({ service }) => {
       await service.saveNote(note);
       let nextNotes = await service.getNotes();
       setNotes(nextNotes);
-      setSelected(null);
+      setSelectedNote(null);
     }
   }, []); // Add dependencies if necessary
 
   const onChange = useCallback((note) => {
-    setSelected(note);
+    setSelectedNote(note);
   }, []);
 
   return (
@@ -57,18 +57,18 @@ export const App = ({ service }) => {
       </div>
       <div className="row">
         <div className="col-md-4">
-          <NotesList notes={notes} selected={selected} onSelect={onSelect} />
+          <NotesList notes={notes} selected={selectedNote} onSelect={onSelect} />
         </div>
         <div className="col-md-8">
-          {selected && (
+          {selectedNote && (
             <NoteForm
-              note={selected}
+              note={selectedNote}
               onChange={onChange}
               onSubmit={onSubmit}
               onCancel={onCancel}
             />
           )}
-          {!selected && (
+          {!selectedNote && (
             <div>
               <button
                 id="new-note"
