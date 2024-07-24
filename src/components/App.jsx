@@ -7,13 +7,17 @@ export const App = ({ service }) => {
   const [notes, setNotes] = useState([]);
   const [selectedNote, setSelectedNote] = useState(null);
 
+  const getNotes = useCallback(async () => {
+    return await service.getNotes();
+  }, [service]);
+
   // (!) Get notes from service
   useEffect(() => {
     (async () => {
-      const notes = await service.getNotes();
+      const notes = await getNotes();
       setNotes(notes);
     })();
-  }, [service]);
+  }, [service, getNotes]);
 
   // Select new empty note
   const newNote = () => {
@@ -38,18 +42,17 @@ export const App = ({ service }) => {
     async (note) => {
       if (note) {
         await service.saveNote(note);
-        let nextNotes = await service.getNotes();
+        let nextNotes = await getNotes();
         setNotes(nextNotes);
         setSelectedNote(null);
       }
     },
-    [service],
+    [service, getNotes],
   ); // Add dependencies if necessary
 
   const onChange = useCallback((note) => {
     setSelectedNote(note);
   }, []);
-
 
   return (
     <div className="container">
@@ -76,11 +79,7 @@ export const App = ({ service }) => {
             />
           ) : (
             <div>
-              <button
-                id="new-note"
-                data-testid="new-note"
-                onClick={newNote}
-              >
+              <button id="new-note" data-testid="new-note" onClick={newNote}>
                 New Note
               </button>
             </div>
