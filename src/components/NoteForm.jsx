@@ -24,7 +24,7 @@ export const NoteForm = ({ note, onSubmit, onCancel, onChange }) => {
           data-testid="input-title"
           name="title"
           onChange={handleChange}
-          value={note?.title}
+          defaultValue={note?.title}
         />
       </div>
       <div className="form-group">
@@ -34,11 +34,12 @@ export const NoteForm = ({ note, onSubmit, onCancel, onChange }) => {
           data-testid="input-text"
           name="text"
           onChange={handleChange}
-          value={note?.text}
+          defaultValue={note?.text}
         />
       </div>
       <div className="form-group">
         <input
+          aria-label="Cancel Note"
           type="button"
           data-testid="cancel-note"
           className="btn btn-default pull-right"
@@ -46,6 +47,7 @@ export const NoteForm = ({ note, onSubmit, onCancel, onChange }) => {
           onClick={onCancel}
         />
         <input
+          aria-label="Save Note"
           type="submit"
           data-testid="save-note"
           className="btn btn-default pull-right"

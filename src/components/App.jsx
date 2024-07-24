@@ -20,7 +20,6 @@ export const App = ({ service }) => {
     setSelectedNote({
       title: "",
       text: "",
-      id: null,
     });
   };
 
@@ -35,18 +34,22 @@ export const App = ({ service }) => {
   }, []);
 
   // Save note to service
-  const onSubmit = useCallback(async (note) => {
-    if (note) {
-      await service.saveNote(note);
-      let nextNotes = await service.getNotes();
-      setNotes(nextNotes);
-      setSelectedNote(null);
-    }
-  }, []); // Add dependencies if necessary
+  const onSubmit = useCallback(
+    async (note) => {
+      if (note) {
+        await service.saveNote(note);
+        let nextNotes = await service.getNotes();
+        setNotes(nextNotes);
+        setSelectedNote(null);
+      }
+    },
+    [service],
+  ); // Add dependencies if necessary
 
   const onChange = useCallback((note) => {
     setSelectedNote(note);
   }, []);
+
 
   return (
     <div className="container">
@@ -57,23 +60,26 @@ export const App = ({ service }) => {
       </div>
       <div className="row">
         <div className="col-md-4">
-          <NotesList notes={notes} selected={selectedNote} onSelect={onSelect} />
+          <NotesList
+            notes={notes}
+            selected={selectedNote}
+            onSelect={onSelect}
+          />
         </div>
         <div className="col-md-8">
-          {selectedNote && (
+          {selectedNote ? (
             <NoteForm
               note={selectedNote}
               onChange={onChange}
               onSubmit={onSubmit}
               onCancel={onCancel}
             />
-          )}
-          {!selectedNote && (
+          ) : (
             <div>
               <button
                 id="new-note"
                 data-testid="new-note"
-                onClick={() => newNote()}
+                onClick={newNote}
               >
                 New Note
               </button>
